@@ -87,7 +87,17 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "aac9b53317c24d63bd0441519e97e0af"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+    TrackJS.track('Testing TrackJS!');
+
+  </script>
+                          
+  <script>    
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +105,78 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        if (isNaN(firstNum)) {
+          throw new Error("first Num is not a Number");
+        }
+        if (isNaN(secondNum)) {
+          throw new NotaNumberError('Second Num not a Number');
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        if (err instanceof NotaNumberError) {
+          alert("Invalid Input: " + err.message);
+        }
+        else {
+          alert("Normal Error: " + err.message);
+        }
+      }
+      finally {
+        alert('Finished Eval');
+      }
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
+                        
+
+    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', function() {console.log('log')});
+
+    errorBtns[1].addEventListener('click', function() {console.error('error')});
+
+    errorBtns[2].addEventListener('click', function() {console.count()});
+
+    errorBtns[3].addEventListener('click', function() {console.warn('warn')});
+
+    errorBtns[4].addEventListener('click', function() {console.assert(5 < 3, '5 is expected to be greater than 3')});
+
+    errorBtns[5].addEventListener('click', function() {console.clear()});
+
+    errorBtns[6].addEventListener('click', function() {console.dir(document.head)});
+
+    errorBtns[7].addEventListener('click', function() {console.dirxml(document)});
+
+    errorBtns[8].addEventListener('click', function() {console.group('group')});
+
+    errorBtns[9].addEventListener('click', function() {console.groupEnd('group')});
+
+    errorBtns[10].addEventListener('click', function() {console.table([{Rat: 1}, {Dog:2}, {Cat:3}])});
+
+    errorBtns[11].addEventListener('click', function() {console.time()});
+
+    errorBtns[12].addEventListener('click', function() {console.timeEnd()});
+
+    errorBtns[13].addEventListener('click', function() {console.trace()});
+
+    errorBtns[14].addEventListener('click', function() {
+      const rat = 1;
+      rat = 2;
+    });
+
+    class NotaNumberError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'NotaNumberError';
+      }
+    }
+
+    function isnotNum() {
+      throw new NotaNumberError("Not a number");
+    }
+
+    window.addEventListener('error', function() { console.log('global error has occured')});
   </script>
 </body>
 
